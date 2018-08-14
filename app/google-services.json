@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "1089320506180",
-    "firebase_url": "https://iclient-169105.firebaseio.com",
-    "project_id": "iclient-169105",
-    "storage_bucket": "iclient-169105.appspot.com"
+    "project_number": "925542413455",
+    "firebase_url": "https://elshowdelmono-212812.firebaseio.com",
+    "project_id": "elshowdelmono-212812",
+    "storage_bucket": "elshowdelmono-212812.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1089320506180:android:02d82e70b95d7dbb",
+        "mobilesdk_app_id": "1:925542413455:android:3ee792427c23b546",
         "android_client_info": {
-          "package_name": "ar.com.iclient"
+          "package_name": "ar.com.elshowdelmono.intranet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1089320506180-lbe34h937mn3t44mc74609rvrpnuf3u3.apps.googleusercontent.com",
+          "client_id": "925542413455-kj2ablp3ovss3hk74mq4p39p6oj7fr0v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB3Og2HkBVtVjoaVgVPUPq2ewFbqyOjBYM"
+          "current_key": "AIzaSyAJUM9jZoKXuUi8U88Wg4Cof9I3dd1_SEc"
         }
       ],
       "services": {

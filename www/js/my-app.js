@@ -7,7 +7,7 @@ var myApp = new Framework7({
 	 modalButtonCancel: 'Cancelar'
 });
 
-var BXL_WWW = 'http://rrhh.dia8labs.tk';
+var BXL_WWW = 'http://intranet.elshowdelmono.com.ar';
 
 var $$ = Dom7;
 
@@ -219,10 +219,10 @@ function ConfigPush(){
 	if(typeof PushNotification === 'undefined') return;
 	var push = PushNotification.init({
 		"android": {
-			"senderID": "566381100711"
+			"senderID": "925542413455"
 		},
 		"ios": {
-			"senderID": "566381100711",
+			"senderID": "925542413455",
 			"sound": true,
 			"vibration": true,
 			"badge": true
