@@ -1,7 +1,7 @@
 var myApp = new Framework7({
 	 swipePanel: 'left',
 	 cache: false,
-	 modalUsernamePlaceholder:'E-Mail',
+	 modalUsernamePlaceholder:'DNI',
 	 modalPasswordPlaceholder:'Contraseña',
 	 modalButtonOk:'Aceptar',
 	 modalButtonCancel: 'Cancelar'
@@ -10,6 +10,13 @@ var myApp = new Framework7({
 var BXL_WWW = 'http://intranet.elshowdelmono.com.ar';
 
 var $$ = Dom7;
+
+$$.ajaxSetup({
+	xhrFields: {
+		withCredentials: true
+	},
+    crossDomain: true
+});
 
 var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
@@ -103,7 +110,7 @@ $$(document).on('pageInit', function (e) {
 	
     if (page.name === 'cuenta') {
 		$$.getJSON(BXL_WWW+'/datos.php?tipo=cuenta', function (json) {
-			//console.log(json);
+			console.log(json);
 			$$('#Datos_Nombre').html(json['Nombre']);
 			//$$('#Datos_DNI').html(json['DNI']);
 			$$('#Datos_Tel').html(json['Telefono']);
