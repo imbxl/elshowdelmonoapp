@@ -38,7 +38,7 @@
 	color:#333;
 }
 .navbar .sliding{
-	color:#FFFFFF;
+	color:#333;
 }
 .list-block {
     margin: 43px 0;
@@ -247,4 +247,85 @@
 }
 .right i{
 	margin: auto;
+}
+.facebook-card{
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+    margin: 10px;
+    position: relative;
+    border-radius: 2px;
+    font-size: 14px;
+}
+.facebook-card .facebook-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+}
+.facebook-card .facebook-date {
+    display: block;
+    font-size: 13px;
+    color: #8e8e93;
+}
+.facebook-card .card-header {
+    display: block;
+    padding: 10px;
+    border-radius: 2px 2px 0 0;
+    font-size: 17px;
+}
+.facebook-card .card-footer a.link, .facebook-card .card-header a.link {
+    line-height: 44px;
+    height: 44px;
+    text-decoration: none;
+    position: relative;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+}
+.facebook-card .card-footer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+	background-color:#F0F0F0;
+}
+.facebook-card .card-footer{
+    min-height: 44px;
+    position: relative;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.facebook-card .card-footer, .facebook-card .card-header {
+    min-height: 44px;
+    position: relative;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
 }

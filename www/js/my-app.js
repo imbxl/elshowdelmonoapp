@@ -8,6 +8,37 @@ var myApp = new Framework7({
 });
 
 var BXL_WWW = 'http://intranet.elshowdelmono.com.ar';
+var BXL_TITLE = 'El Show Del Mono';
+
+function showMessage(message, callback, title, buttonName){
+	title = title || BXL_TITLE;
+	buttonName = buttonName || 'Aceptar';
+	if(navigator.notification && navigator.notification.alert){
+		navigator.notification.alert(
+			message,    // message
+			callback,   // callback
+			title,      // title
+			buttonName  // buttonName
+		);
+	}else{
+		alert(message);
+		callback();
+	}
+}
+function showConfirm(message, callback, title, buttonName){
+	title = title || BXL_TITLE;
+	buttonName = buttonName || 'Aceptar';
+	if(navigator.notification && navigator.notification.alert){
+		navigator.notification.confirm(
+			message,    // message
+			callback,   // callback
+			title,      // title
+			buttonName  // buttonName
+		);
+	}else{
+		if(confirm(message)) callback();
+	}
+}
 
 var $$ = Dom7;
 
@@ -33,7 +64,7 @@ $$(document).on('deviceready', function() {
 		//return false;
 	}, false ); 
 	$$('.view-main .navbar').show();
-	if($$('.view-main .toolbar').html() != '') $$('.view-main .toolbar').show();
+	//if($$('.view-main .toolbar').html() != '') $$('.view-main .toolbar').show();
 	testLogin();
 });
 
@@ -54,8 +85,8 @@ var mySwiper1 = myApp.swiper('.swiper-1', {
 });
 
 myApp.onPageAfterAnimation('index', function (page){
-	mainView.showToolbar(false);
-	mainView.hideToolbar(true);
+	//mainView.showToolbar(false);
+	//mainView.hideToolbar(true);
 })
 
 var XAP_init = false;
@@ -102,18 +133,26 @@ $$(document).on('pageInit', function (e) {
 	
     if (page.name === 'index') {
 		testLogin();
-		mainView.showToolbar(false);
-		$$('#MainToolbar').html('');
+		if(IniciadoSesion){
+			//console.log('TraerEventos');
+			GetEventos();
+		}
+		//mainView.showToolbar(true);
+		//$$('#MainToolbar').html('');
 	}else{
-		mainView.hideToolbar(true);
+		//mainView.showToolbar(true);
+		//mainView.hideToolbar(true);
 	}
+	
+	$$('#MainToolbar .link').removeClass('active');
+	$$('#MainToolbar .link.'+page.name).addClass('active');
 	
     if (page.name === 'cuenta') {
 		$$.getJSON(BXL_WWW+'/datos.php?tipo=cuenta', function (json) {
 			console.log(json);
 			$$('#Datos_Nombre').html(json['Nombre']);
 			//$$('#Datos_DNI').html(json['DNI']);
-			$$('#Datos_Tel').html(json['Telefono']);
+			$$('#Datos_DNI').html(json['DNI']);
 			$$('#Datos_Email').html(json['Email']);
 			$$('#Datos_Horas').html('<input type="number" onChange="CambiarHoras(this.value);" value="'+json['Horas']+'">');
 			//$$('#Datos_Puntos').html(parseInt(json['Puntos'])-parseInt(json['Canjes']));
@@ -131,10 +170,10 @@ $$(document).on('pageInit', function (e) {
 		
     if (page.name === 'calendario') {
 		GetCalendario();
-		mainView.hideToolbar(false);
-		mainView.showToolbar(true);
-		$$('#MainToolbar').html($$('.calendar-toolbar').html());
-		$$('#MainToolbar').show();
+		//mainView.hideToolbar(false);
+		//mainView.showToolbar(true);
+		//$$('#MainToolbar').html($$('.calendar-toolbar').html());
+		//$$('#MainToolbar').show();
 	}
 	
 	myApp.closePanel();
@@ -155,10 +194,10 @@ function Registrarme() {
 		},
 		function( data ) {
         	if (data == 'OK') {
-				navigator.notification.alert('¡Se registró con exito en Sanatorio de la Trinidad!',function(){},'Registro');
+				showMessage('¡Se registró con exito en Sanatorio de la Trinidad!',function(){},'Registro');
 				login(document.getElementById('formreg_mail').value, document.getElementById('formreg_pass').value);
 			}else{
-				navigator.notification.alert(data,function(){},'Error');
+				showMessage(data,function(){},'Error');
 			}
 		}
 	);
@@ -265,36 +304,57 @@ function FiltrarPorEmpresa(){
 }
 
 function GetProductos(){
+	$$('.productos_lista').empty();
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=productos', function (json) {
 		//console.log(json);
 		var html = '';
 		$$.each(json, function (index, row) {
-			var Postulado = parseInt(row.Postulado) || 0;
 			html += '<div id="prod_'+row.id+'" class="producto_item" categorias="'+row.Categorias+'">\
 				<div class="card">\
                 <div class="card-header">';
-             html += '<div class="avatar">\
+             /*html += '<div class="avatar">\
                     	<div class="circle-'+row.Estado+'"></div>\
-                    </div>';
+                    </div>';*/
              html += '<div class="user flex-column">\
-                        <div class="name">'+row.Departamento+'</div>\
-                        <div class="time">'+row.Fecha+' - <b>'+row.Turno+'</b></div>\
+                        <div class="name">'+row.Cargo+' para '+row.Tipo+' en '+row.Sede+'</div>\
+                        <div class="time">'+row.FechaYHora+'</div>\
                     </div>\
                 </div>\
                 <div class="card-content">\
-                    <div class="text">'+row.Descripcion+'</div>\
+                    <div class="text">Debes estar a las '+row.HoraPresencia+'</div>\
                 </div>\
                 <div class="card-footer flex-row">';
-				if(Postulado > 0){
-                html += '<div class="flex-rest-width tool" style="text-align:center;"><b style="text-align:center;"><span class="text">Ya postulado</span></b></div>';
-				}else{
-                html += '<a href="#" onclick="ProductoVerMas('+row.id+')" class="tool flex-rest-width link"><i class="f7-icons">check</i> <span class="text">Postularme</span></a>';
-				}				
+				
+                html += '<a href="#" onclick="ProductoCanjear('+row.id+',\'A\')" class="tool flex-rest-width link"><i class="f7-icons">check</i> <span class="text">Aceptar puesto</span></a>';			
+                html += '<a href="#" onclick="ProductoCanjear('+row.id+',\'R\')" class="tool flex-rest-width link"><i class="f7-icons">close</i> <span class="text">Rechazar puesto</span></a>';			
             html += '</div>\
             	</div>\
 			</div>';			
 		}); 
 		$$('.productos_lista').html(html);
+		CloseLoaderPrincipal();
+	});
+}
+function GetEventos(){
+	$$('.ProximosEventos').empty();
+	$$.getJSON(BXL_WWW+'/datos.php?tipo=proximos', function (json) {
+		console.log(json);
+		var html = '';
+		$$.each(json, function (index, row) {
+			html += '<div class="card facebook-card">'+
+                     	'<div class="card-header no-border">'+
+                        	'<div class="facebook-name">'+row.Cargo+' para '+row.Tipo+' en '+row.Sede+'</div>'+
+                            '<div class="facebook-date">'+row.FechaYHora+'</div>'+
+                        '</div>'+
+                		'<div class="card-content">'+
+                    		'<div class="text">Debes estar a las '+row.HoraPresencia+'</div>'+
+                		'</div>'+
+                        '<div class="card-footer no-border flex-row">'+
+                        	'<a href="#" onclick="PedirReemplazo('+row.id+')" class="tool flex-rest-width link">Pedir reemplazo</a>'+
+                        '</div>'+
+                    '</div>';			
+		}); 
+		$$('.ProximosEventos').html(html);
 		CloseLoaderPrincipal();
 	});
 }
@@ -327,14 +387,23 @@ function ProductoVerMas(id){
 	myApp.popup('.popup-producto');
 }
 function ProductoCanjear(id, categoria){
+	if(categoria == 'A'){
+		showConfirm('¿Esta seguro que desea aceptar el puesto?',function(){ProductoCanjearAction(id, categoria)});
+	}else{
+		showConfirm('¿Esta seguro que desea rechazar el puesto?',function(){ProductoCanjearAction(id, categoria)});
+	}
+}
+function ProductoCanjearAction(id, categoria){
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=postularme&id='+id+'&categoria='+categoria, function (json) {
 		if(json != 'OK'){
-			navigator.notification.alert(json['msg'],function(){},'Error');
-			return;
+			showMessage(json['msg'],function(){},'Error');
+		}else{
+			if(categoria == 'A') showMessage('El puesto se aceptó con éxito!',function(){},'Confirmación');
+			if(categoria == 'R') showMessage('El puesto se rechazó correctamente!',function(){},'Confirmación');
 		}
-		navigator.notification.alert('Ya recibimos su respuesta!',function(){},'Confirmación');
-		myApp.closeModal('.popup-producto', false);
-		mainView.router.load({url:'historial.html', reload: true});
+		//myApp.closeModal('.popup-producto', false);
+		//mainView.router.load({url:'puestos.html', reload: true});
+		mainView.router.load({url:'puestos.html', reload: true});
 	});
 }
 
@@ -465,7 +534,7 @@ function EnviarSolicitud(){
 				myApp.closeModal('.popup-postularme', false);
 				CloseLoaderPrincipal();
 			}else{
-				navigator.notification.alert(data,function(){},'Error');
+				showMessage(data,function(){},'Error');
 			}
 		}
 	);

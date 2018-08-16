@@ -11,7 +11,7 @@
     <meta name="msapplication-tap-highlight" content="no">
 
     <!-- Your app title -->
-    <title>Sanatorio Trinidad Palermo</title>
+    <title>Intranet - El Show Del Mono</title>
 
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
@@ -48,6 +48,7 @@
                         </div>
                       </a>
                     </li>
+                    <!--
                     <li>
                       <a href="calendario.html" class="item-link item-content">
                         <div class="item-media"><i class="f7-icons">calendar</i></div>
@@ -56,6 +57,8 @@
                         </div>
                       </a>
                     </li>
+                    -->
+                    <!--
                     <li>
                       <a href="historial.html" class="item-link item-content">
                         <div class="item-media"><i class="f7-icons">time</i></div>
@@ -64,6 +67,7 @@
                         </div>
                       </a>
                     </li>
+                    -->
                     <li>
                       <a href="#" onClick="LogOut();" class="item-link item-content">
                         <div class="item-media"><i class="f7-icons">logout</i></div>
@@ -96,24 +100,36 @@
             </div>
             <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
             <div class="pages navbar-through toolbar-through">
-                <!-- Page, "data-page" contains page name -->
+                <!-- Page, "data-page" contains page name  -->
                 <div data-page="index" class="page">
-                    <!-- Scrollable page content -->
-                    <div class="page-content" style="padding-bottom:0">
-                        <div class="content-block" style="margin:0">
-                            <div class="row">
-                                <a href="cuenta.html" class="bloquehome col-50"><i class="f7-icons">person_fill</i><span>Mis datos</span></a>
-                                <a href="puestos.html" class="bloquehome col-50"><i class="f7-icons">list_fill</i><span>Puestos</span></a>
-                            </div>
-                            <div class="row">
-                                <a href="calendario.html" class="bloquehome col-50"><i class="f7-icons">calendar_fill</i><span>Calendario</span></a>
-                                <a href="historial.html" class="bloquehome col-50"><i class="f7-icons">time_fill</i><span>Historial</span></a>
-                            </div>
-                        </div>
+                    <div class="page-content">
+                    	<div class="content-block-title">Proximos Eventos</div>
+                        <div class="ProximosEventos"></div>
                     </div>
                 </div>
             </div>
-            <div id="MainToolbar" class="toolbar custom-toolbar" style="display:none"></div>
+            <div id="MainToolbar" class="toolbar tabbar tabbar-labels">
+                <div class="toolbar-inner">
+                    <a href="index.html" class="link index">
+                        <i class="f7-icons">home</i>
+                        <span class="tabbar-label" style="margin-left:0; margin-top:5px;">Inicio</span>
+                    </a>
+                    <!--
+                    <a href="calendario.html" class="link calendario">
+                        <i class="f7-icons">calendar</i>
+                        <span class="tabbar-label" style="margin-left:0; margin-top:5px;">Calendario</span>
+                    </a>
+                    -->
+                    <a href="puestos.html" class="link puestos">
+                        <i class="f7-icons">list_fill</i>
+                        <span class="tabbar-label" style="margin-left:0; margin-top:5px;">Puestos</span>
+                    </a>
+                    <a href="cuenta.html" class="link cuenta">
+                        <i class="f7-icons">person_fill</i>
+                        <span class="tabbar-label" style="margin-left:0; margin-top:5px;">Mis datos</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
