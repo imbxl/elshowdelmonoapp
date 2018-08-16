@@ -393,6 +393,20 @@ function ProductoCanjear(id, categoria){
 		showConfirm('¿Esta seguro que desea rechazar el puesto?',function(){ProductoCanjearAction(id, categoria)});
 	}
 }
+function PedirReemplazo(id){
+	showConfirm('¿Esta seguro que desea renunciar al puesto y pedir un reemplazo?',function(){
+		$$.getJSON(BXL_WWW+'/datos.php?tipo=reemplazo&id='+id, function (json) {
+			if(json != 'OK'){
+				showMessage(json['msg'],function(){},'Error');
+			}else{
+				showMessage('Recibimos su pedido de reemplazo!',function(){},'Confirmación');
+			}
+			//myApp.closeModal('.popup-producto', false);
+			//mainView.router.load({url:'puestos.html', reload: true});
+			mainView.router.load({url:'index.html', reload: true});
+		});
+	});
+}
 function ProductoCanjearAction(id, categoria){
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=postularme&id='+id+'&categoria='+categoria, function (json) {
 		if(json != 'OK'){
