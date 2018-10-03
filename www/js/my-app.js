@@ -241,38 +241,44 @@ function testLogin(){
 }
 
 function ConfigPush(){
-	if(typeof PushNotification === 'undefined') return;
-	var push = PushNotification.init({
-		"android": {
-			"senderID": "925542413455"
-		},
-		"ios": {
-			"senderID": "925542413455",
-			"sound": true,
-			"vibration": true,
-			"badge": true
-		}
-	});
-	push.on('registration', function(data) {
-		var oldRegId = localStorage.getItem('registrationId');
-		if (oldRegId !== data.registrationId) {
-			// Save new registration ID
-			localStorage.setItem('registrationId', data.registrationId);
-			// Post registrationId to your app server as the value has changed
-		}
-		$$.post( BXL_WWW+"/datos.php?tipo=register", {id:data.registrationId});
-	});
-	push.on('error', function(e) { console.log("push error = " + e.message); });
-	push.on('notification', function(data) {
-		if(data.title == 'Asignado a puesto'){
-			mainView.router.load({url:'historial.html', reload: true});
-		}else if(data.title == 'Nuevo puesto'){
-			mainView.router.load({url:'puestos.html', reload: true});
-		}else{
-			mainView.router.load({url:'index.html', reload: true});
-			showMessage(data.message,data.title,function(){});
-		}
-   });
+	try{
+		var push = PushNotification.init({
+			"android": {
+				"senderID": "925542413455",
+				"forceShow": true
+			},
+			"ios": {
+				"senderID": "925542413455",
+				alert: "true",
+				badge: true,
+				sound: 'true',
+				"forceShow": true
+			}
+		});
+		push.on('registration', function(data) {
+			var oldRegId = localStorage.getItem('registrationId');
+			if (oldRegId !== data.registrationId) {
+				// Save new registration ID
+				localStorage.setItem('registrationId', data.registrationId);
+				// Post registrationId to your app server as the value has changed
+			}
+			$$.post( BXL_WWW+"/datos.php?tipo=register", {id:data.registrationId});
+		});
+		push.on('error', function(e) { console.log("push error = " + e.message); });
+		push.on('notification', function(data) {
+			if(data.title == 'Asignado a puesto'){
+				mainView.router.load({url:'historial.html', reload: true});
+			}else if(data.title == 'Nuevo puesto'){
+				mainView.router.load({url:'puestos.html', reload: true});
+			}else{
+				mainView.router.load({url:'index.html', reload: true});
+				showMessage(data.message,data.title,function(){});
+			}
+	   });
+	}
+	catch(err) {
+		console.log(err)
+	}
 }
 
 function FiltrarPorEmpresa(){
