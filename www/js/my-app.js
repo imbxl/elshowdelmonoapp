@@ -270,6 +270,7 @@ function ConfigPush(){
 			mainView.router.load({url:'puestos.html', reload: true});
 		}else{
 			mainView.router.load({url:'index.html', reload: true});
+			showMessage(data.message,data.title,function(){});
 		}
    });
 }
