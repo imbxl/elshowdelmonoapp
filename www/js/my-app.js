@@ -271,6 +271,8 @@ function ConfigPush(){
 					mainView.router.load({url:'historial.html', reload: true});
 				}else if(data.title == 'Nuevo puesto de trabajo'){
 					mainView.router.load({url:'puestos.html', reload: true});
+				}else if(data.title == 'Respondieron tu consulta'){
+					mainView.router.load({url:'index.html', reload: true});
 				}else{
 					mainView.router.load({url:'index.html', reload: true});
 					showMessage(data.message,data.title,function(){});
