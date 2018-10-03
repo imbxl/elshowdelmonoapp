@@ -267,15 +267,19 @@ function ConfigPush(){
 		push.on('error', function(e) { console.log("push error = " + e.message); });
 		push.on('notification', function(data) {
 			if(typeof data.additionalData !== 'undefined'){
-				if(data.title == 'Asignado a puesto'){
-					mainView.router.load({url:'historial.html', reload: true});
-				}else if(data.title == 'Nuevo puesto de trabajo'){
-					mainView.router.load({url:'puestos.html', reload: true});
-				}else if(data.title == 'Respondieron tu consulta'){
-					mainView.router.load({url:'index.html', reload: true});
-				}else{
-					mainView.router.load({url:'index.html', reload: true});
-					showMessage(data.message,data.title,function(){});
+				var tipo = '';
+				if(typeof data.additionalData.tipo !== 'undefined') tipo = data.additionalData.tipo;
+				if(tipo != ''){
+					if(data.title == 'Asignado a puesto'){
+						mainView.router.load({url:'historial.html', reload: true});
+					}else if(data.title == 'Nuevo puesto de trabajo'){
+						mainView.router.load({url:'puestos.html', reload: true});
+					}else if(data.title == 'Respondieron tu consulta'){
+						mainView.router.load({url:'index.html', reload: true});
+					}else{
+						mainView.router.load({url:'index.html', reload: true});
+						showMessage(data.message,data.title,function(){});
+					}
 				}
 			}
 	   });
