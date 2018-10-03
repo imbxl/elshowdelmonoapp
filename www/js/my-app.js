@@ -266,13 +266,15 @@ function ConfigPush(){
 		});
 		push.on('error', function(e) { console.log("push error = " + e.message); });
 		push.on('notification', function(data) {
-			if(data.title == 'Asignado a puesto'){
-				mainView.router.load({url:'historial.html', reload: true});
-			}else if(data.title == 'Nuevo puesto'){
-				mainView.router.load({url:'puestos.html', reload: true});
-			}else{
-				mainView.router.load({url:'index.html', reload: true});
-				showMessage(data.message,data.title,function(){});
+			if(typeof data.additionalData !== 'undefined'){
+				if(data.title == 'Asignado a puesto'){
+					mainView.router.load({url:'historial.html', reload: true});
+				}else if(data.title == 'Nuevo puesto de trabajo'){
+					mainView.router.load({url:'puestos.html', reload: true});
+				}else{
+					mainView.router.load({url:'index.html', reload: true});
+					showMessage(data.message,data.title,function(){});
+				}
 			}
 	   });
 	}
