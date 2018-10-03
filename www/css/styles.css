@@ -112,6 +112,14 @@
     padding: 5px 10px;
     position: relative;
 }
+.card .card-content .consultas{
+	font-weight:normal;
+	color:#999
+}
+.card .card-content .consultas b{
+	font-weight:normal;
+	color:#000
+}
 .card-footer {
     border-radius: 0 0 2px 2px;
     color: #6d6d72;

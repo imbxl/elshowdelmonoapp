@@ -10,34 +10,13 @@ var myApp = new Framework7({
 var BXL_WWW = 'http://intranet.elshowdelmono.com.ar';
 var BXL_TITLE = 'El Show Del Mono';
 
-function showMessage(message, callback, title, buttonName){
+function showMessage(message, title, callbackOk){
 	title = title || BXL_TITLE;
-	buttonName = buttonName || 'Aceptar';
-	if(navigator.notification && navigator.notification.alert){
-		navigator.notification.alert(
-			message,    // message
-			callback,   // callback
-			title,      // title
-			buttonName  // buttonName
-		);
-	}else{
-		alert(message);
-		callback();
-	}
+	myApp.alert(message, title, callbackOk);
 }
-function showConfirm(message, callback, title, buttonName){
+function showConfirm(message, title, callbackOk, callbackCancel){
 	title = title || BXL_TITLE;
-	buttonName = buttonName || 'Aceptar';
-	if(navigator.notification && navigator.notification.alert){
-		navigator.notification.confirm(
-			message,    // message
-			callback,   // callback
-			title,      // title
-			buttonName  // buttonName
-		);
-	}else{
-		if(confirm(message)) callback();
-	}
+	myApp.confirm(message, title, callbackOk, callbackCancel);
 }
 
 var $$ = Dom7;
@@ -194,10 +173,10 @@ function Registrarme() {
 		},
 		function( data ) {
         	if (data == 'OK') {
-				showMessage('¡Se registró con exito en Sanatorio de la Trinidad!',function(){},'Registro');
+				showMessage('¡Se registró con exito en El Show Del Mono!','Registro',function(){});
 				login(document.getElementById('formreg_mail').value, document.getElementById('formreg_pass').value);
 			}else{
-				showMessage(data,function(){},'Error');
+				showMessage(data,'Error',function(){});
 			}
 		}
 	);
@@ -335,6 +314,20 @@ function GetProductos(){
 		CloseLoaderPrincipal();
 	});
 }
+function EnviarConsulta(id,elm){
+	var consulta = $$(elm).parent().find('textarea').val();
+	if(consulta == ''){		
+			showMessage("Debe escribir una consulta",'Error',function(){});
+			return;
+	}
+	$$('.btn_consulta').remove();
+	$$.post(BXL_WWW+"/datos.php?tipo=enviar_consulta", {id:id, msg:consulta},
+		function( data ) {
+			showMessage(data,'Consulta Enviada',function(){});
+			GetEventos();
+		}
+	);
+}
 function GetEventos(){
 	$$('.ProximosEventos').empty();
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=proximos', function (json) {
@@ -348,6 +341,12 @@ function GetEventos(){
                         '</div>'+
                 		'<div class="card-content">'+
                     		'<div class="text">Debes estar a las '+row.HoraPresencia+'</div>'+
+							'<hr/>'+
+                    		'<div class="consultas">'+
+								row.Consultas+
+								'<div class="item-input"><textarea style="border-radius:5px; width:100%; padding: 5px; box-sizing: border-box;" placeholder="Realizar una consulta"></textarea></div>'+
+								'<a class="button right btn_consulta" href="#" onclick="EnviarConsulta('+row.evento_id+', this)">Enviar consulta</a>'+
+							'</div>'+
                 		'</div>'+
                         '<div class="card-footer no-border flex-row">'+
                         	'<a href="#" onclick="PedirReemplazo('+row.id+')" class="tool flex-rest-width link">Pedir reemplazo</a>'+
@@ -388,32 +387,32 @@ function ProductoVerMas(id){
 }
 function ProductoCanjear(id, categoria){
 	if(categoria == 'A'){
-		showConfirm('¿Esta seguro que desea aceptar el puesto?',function(){ProductoCanjearAction(id, categoria)});
+		showConfirm('¿Esta seguro que desea aceptar el puesto?', 'Aceptar Puesto',function(){ProductoCanjearAction(id, categoria)},function(){});
 	}else{
-		showConfirm('¿Esta seguro que desea rechazar el puesto?',function(){ProductoCanjearAction(id, categoria)});
+		showConfirm('¿Esta seguro que desea rechazar el puesto?', 'Rechazar Puesto',function(){ProductoCanjearAction(id, categoria)},function(){});
 	}
 }
 function PedirReemplazo(id){
-	showConfirm('¿Esta seguro que desea renunciar al puesto y pedir un reemplazo?',function(){
+	showConfirm('¿Esta seguro que desea renunciar al puesto y pedir un reemplazo?', 'Pedir Reemplazo',function(){
 		$$.getJSON(BXL_WWW+'/datos.php?tipo=reemplazo&id='+id, function (json) {
 			if(json != 'OK'){
-				showMessage(json['msg'],function(){},'Error');
+				showMessage(json['msg'],'Error',function(){});
 			}else{
-				showMessage('Recibimos su pedido de reemplazo!',function(){},'Confirmación');
+				showMessage('Recibimos su pedido de reemplazo!','Confirmación',function(){});
 			}
 			//myApp.closeModal('.popup-producto', false);
 			//mainView.router.load({url:'puestos.html', reload: true});
 			mainView.router.load({url:'index.html', reload: true});
 		});
-	});
+	},function(){});
 }
 function ProductoCanjearAction(id, categoria){
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=postularme&id='+id+'&categoria='+categoria, function (json) {
 		if(json != 'OK'){
-			showMessage(json['msg'],function(){},'Error');
+			showMessage(json['msg'],'Error',function(){});
 		}else{
-			if(categoria == 'A') showMessage('El puesto se aceptó con éxito!',function(){},'Confirmación');
-			if(categoria == 'R') showMessage('El puesto se rechazó correctamente!',function(){},'Confirmación');
+			if(categoria == 'A') showMessage('El puesto se aceptó con éxito!','Confirmación',function(){});
+			if(categoria == 'R') showMessage('El puesto se rechazó correctamente!','Confirmación',function(){});
 		}
 		//myApp.closeModal('.popup-producto', false);
 		//mainView.router.load({url:'puestos.html', reload: true});
@@ -548,7 +547,7 @@ function EnviarSolicitud(){
 				myApp.closeModal('.popup-postularme', false);
 				CloseLoaderPrincipal();
 			}else{
-				showMessage(data,function(){},'Error');
+				showMessage(data,'Error',function(){});
 			}
 		}
 	);
