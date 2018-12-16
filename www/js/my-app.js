@@ -182,12 +182,25 @@ function Registrarme() {
 	);
 }
 
+function EnviarClaveNueva(){
+	$$.post( BXL_WWW+"/login.php", {Email:strU, Clave:strP},
+		function( data ) {
+        	if (data == 'OK') {
+				showMessage("Contraseña cambiada correctamente",'Error',function(){});
+				mainView.router.load({url:'index.html', reload: true});
+			}else{
+				showMessage(data,'Error',function(){});
+			}
+		}
+	);
+}
+
 var IniciadoSesion = false;
 function login(strU, strP) {
     //verificamos conexion y servidores
 	$$.post( BXL_WWW+"/login.php", {Email:strU, Clave:strP},
 		function( data ) {
-        	if (data == 'OK') {
+        	if (data == 'OK' || data == 'CLAVE_ORIGINAL') {
 				myApp.closeModal('.login-screen', false);
 				var estrU = CryptoJS.AES.encrypt(strU, "strU");
 				var estrP = CryptoJS.AES.encrypt(strP, "strP");
@@ -201,6 +214,7 @@ function login(strU, strP) {
 					//console.log('TraerEventos');
 					GetEventos();
 				}
+				showMessage('Recuerde cambiar su contraseña','Registro',function(){});
 			}else{
 				CloseLoaderPrincipal();
 				MostrarModalLogin('Los datos no son correctos.<br/>');
