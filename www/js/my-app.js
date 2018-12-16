@@ -183,7 +183,7 @@ function Registrarme() {
 }
 
 function EnviarClaveNueva(){
-	$$.post( BXL_WWW+"/login.php", {Email:strU, Clave:strP},
+	$$.post( BXL_WWW+"/cambiarclave.php", {Email:strU, Clave:strP},
 		function( data ) {
         	if (data == 'OK') {
 				showMessage("Contraseña cambiada correctamente",'Error',function(){});
