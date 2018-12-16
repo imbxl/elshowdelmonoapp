@@ -197,6 +197,10 @@ function login(strU, strP) {
 				mainView.router.load({url:'index.html'});
 				ConfigPush();
 				CloseLoaderPrincipal();
+				if(IniciadoSesion){
+					//console.log('TraerEventos');
+					GetEventos();
+				}
 			}else{
 				CloseLoaderPrincipal();
 				MostrarModalLogin('Los datos no son correctos.<br/>');
