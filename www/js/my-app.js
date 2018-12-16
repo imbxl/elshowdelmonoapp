@@ -186,7 +186,7 @@ function EnviarClaveNueva(){
 	$$.post( BXL_WWW+"/cambiarclave.php", {Clave:$$('#Datos_ClaveVieja').val(), Clave2:$$('#Datos_ClaveNueva').val()},
 		function( data ) {
         	if (data == 'OK') {
-				showMessage("Contraseña cambiada correctamente",'Error',function(){});
+				showMessage("Contraseña cambiada correctamente",'Informacion',function(){});
 				mainView.router.load({url:'index.html', reload: true});
 			}else{
 				showMessage(data,'Error',function(){});
@@ -214,7 +214,7 @@ function login(strU, strP) {
 					//console.log('TraerEventos');
 					GetEventos();
 				}
-				showMessage('Recuerde cambiar su contraseña','Registro',function(){});
+				if(data == 'CLAVE_ORIGINAL') showMessage('Recuerde cambiar su contraseña','Informacion',function(){});
 			}else{
 				CloseLoaderPrincipal();
 				MostrarModalLogin('Los datos no son correctos.<br/>');
