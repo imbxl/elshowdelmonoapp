@@ -45,6 +45,7 @@ function CloseAuditoria(){
 }
 
 function SacarFoto(){
+	
 	imageCapture.takePhoto()
             .then(blob => {
                 console.log('Photo taken: ' + blob.type + ', ' + blob.size + 'B');
@@ -53,8 +54,17 @@ function SacarFoto(){
             })
             .catch(err => console.error('takePhoto() failed: ', err));
 }
-
+var imageCapture;
 $$(document).on('deviceready', function() {	  
+	navigator.mediaDevices.getUserMedia({
+		'audio': true,
+		'video': {
+			facingMode: 'user'
+		}
+	}).then(function(getmedia) {
+		var track = getmedia.getVideoTracks()[0];
+		imageCapture = new ImageCapture(track);
+	});
 	document.addEventListener("backbutton", function (e) { 
 		e.preventDefault(); 
 		
