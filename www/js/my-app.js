@@ -233,13 +233,13 @@ var canvas = document.getElementById("firma_canvas");
 var signaturePad = new SignaturePad(canvas);
 function Firma(id) {
 	FirmaID = id;
-	/*
 	myApp.pickerModal('.picker-firma');
+	/*
 	init();
 	*/
 }
 function SaveFirmaItem() {
-	$$('.audi_item_'+FirmaID+' .img').val(firma_canvas.toDataURL());
+	$$('.audi_item_'+FirmaID+' .img').val(signaturePad.toDataURL("image/jpeg"));
 	$$('.audi_item_'+FirmaID+' .foto').addClass('ok');
 	myApp.closeModal('.picker-firma');
 	FirmaID = 0;
