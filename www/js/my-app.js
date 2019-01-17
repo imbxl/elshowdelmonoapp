@@ -38,81 +38,26 @@ function AddAuditoria(){
 	myApp.popup('.popup-auditoria');
 }
 function CloseAuditoria(){
-	showConfirm("¿Desea salir de la auditoría? Se perderán todas las modificaciones.", 'Salir de Auditoría',function(){  myApp.closeModal('.popup-auditoria'); },function(){});
+	showConfirm("¿Desea salir de la auditoría? Se perderán todas las modificaciones.", 'Salir de Auditoría',function(){  
+		myApp.closeModal('.popup-auditoria'); 
+		EnAuditoria = false;
+	},function(){});
 }
 
-function onPhotoFileSuccess(imageData) {
-  alert("onPhotoFileSuccess was called. imageData: "+imageData);
-  // Get image handle
-  console.log(JSON.stringify(imageData));
-
-  // Get image handle
-  //
-  var largeImage = document.getElementById('largeImage');
-  // Unhide image elements
-  //
-  largeImage.style.display = 'block';
-  document.getElementById('uploadpicbtn').style.display="block";
-  // Show the captured photo
-  // The inline CSS rules are used to resize the image
-  //
-  largeImage.src = imageData;
-  uploadimgdata=imageData;
-}
-// Called when a photo is successfully retrieved
-//
-function onPhotoURISuccess(imageURI) {
-  alert("onPhotoURISuccess was called. imageuri: "+imageURI);
-  // Uncomment to view the image file URI
-  // console.log(imageURI);
-  // Get image handle
-  //
-  var largeImage = document.getElementById('largeImage');
-  // Unhide image elements
-  //
-  largeImage.style.display = 'block';
-  document.getElementById('uploadpicbtn').style.display="block";
-  // Show the captured photo
-  // The inline CSS rules are used to resize the image
-  //
-
-//custom code to fix image uri
-  if (imageURI.substring(0,21)=="content://com.android") {
-    photo_split=imageURI.split("%3A");
-    imageURI="content://media/external/images/media/"+photo_split[1];
-  }
-
-  largeImage.src = imageURI;
-  document.getElementById('uploadpicbtn').style.display="block";
-
-uploadimgdata=imageURI;
+function SacarFoto(){
+	navigator.device.capture.captureImage(function(mediaFiles){
+		var i, path, len;
+		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+			path = mediaFiles[i].fullPath;
+			// do something interesting with the file
+    		showAlert(path, 'Captura');
+		}
+	}, function(error){
+    	showAlert('Error: ' + error.code, null, 'Error de captura');
+	}, {limit:1});
 }
 
-function capturePhotoWithFile() {
-    navigator.camera.getPicture(onPhotoFileSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
-}
-
-// A button will call this function
-//
-function getPhoto(source) {
-  alert("getphoto was called. source= "+source);
-  // Retrieve image file location from specified source
-  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
-    destinationType: destinationType.FILE_URI,
-    sourceType: source });
-}
-// Called if something bad happens.
-//
-function onFail(message) {
-  alert('Failed because: ' + message);
-}
-
-$$(document).on('deviceready', function() {
-	if(typeof navigator !== 'undefined' && typeof navigator.camera !== 'undefined'){
-   		pictureSource = navigator.camera.PictureSourceType;
-   		destinationType = navigator.camera.DestinationType;
-	}
-	  
+$$(document).on('deviceready', function() {	  
 	document.addEventListener("backbutton", function (e) { 
 		e.preventDefault(); 
 		

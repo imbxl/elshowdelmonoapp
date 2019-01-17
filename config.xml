@@ -44,7 +44,13 @@
         <preference name="BackupWebStorage" value="none" />
 		<resource-file src="GoogleService-Info.plist" />
 		<edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
-			<string>Se necesita acceso a la camara para leer QR</string>
+			<string>Se necesita acceso a la camara para sacar fotos</string>
+		</edit-config>
+		<edit-config target="NSMicrophoneUsageDescription" file="*-Info.plist" mode="merge">
+			<string>Se necesita acceso al microfono para grabar audios</string>
+		</edit-config>
+		<edit-config target="NSPhotoLibraryUsageDescription" file="*-Info.plist" mode="merge">
+			<string>Se necesita acceso a la galeria de imagenes para poder seleccionar la foto</string>
 		</edit-config>
 		<plugin name="phonegap-plugin-push">
 			<variable name="SENDER_ID" value="925542413455" />
@@ -54,4 +60,5 @@
 	<plugin name="cordova-plugin-dialogs" />
 	<plugin name="cordova-plugin-console" />
 	<plugin name="cordova-plugin-statusbar" />
+	<plugin name="cordova-plugin-media-capture" />
 </widget>
