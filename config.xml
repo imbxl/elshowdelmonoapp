@@ -43,6 +43,9 @@
         <allow-intent href="itms-apps:*" />
         <preference name="BackupWebStorage" value="none" />
 		<resource-file src="GoogleService-Info.plist" />
+		<edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+			<string>Se necesita acceso a la camara para leer QR</string>
+		</edit-config>
 		<plugin name="phonegap-plugin-push">
 			<variable name="SENDER_ID" value="925542413455" />
 		</plugin>
