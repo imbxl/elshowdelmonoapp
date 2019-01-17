@@ -154,82 +154,52 @@
                         <span>Volver</span>
                     </a>
                 </div>
-        		<div class="center sliding">Vicente López</div>
+        		<div class="center sliding titulo-auditoria"></div>
         		<div class="right"></div>
         	</div>
         </div>
-        <form class="contenido">
+        <form id="FormAuditoria" class="contenido">
+        	<input type="hidden" class="accion" name="accion" value="" />
+        	<input type="hidden" class="sede" name="sede" value="" />
+        	<input type="hidden" class="id" name="id" value="" />
             <div class="list-block accordion-list">
-              <ul>
-                <li class="accordion-item"><a href="#" class="item-content item-link">
-                    <div class="item-inner">
-                      <div class="item-title">Staff</div>
-                    </div></a>
-                  <div class="accordion-item-content">
-                    <div class="content-block">
-                      	<div class="list-block">
-                          <ul>
-                            <li class="item-content">
-                              <div class="item-inner">
-                                <div class="item-title">Presencia y cuidado en el aspecto</div>
-                                <div class="item-after">
-                                    <div class="custom_check"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
-                                    <i class="f7-icons foto ok">camera_fill</i>
-                                    <i class="f7-icons mensaje">compose_fill</i>
-                                    <i class="f7-icons">more_vertical_fill</i>
-                                </div>
-                              </div>
-                            </li>
-                            <li class="item-content audi_item_2">
-                              <div class="item-inner">
-                                <div class="item-title">Uniforme / Personificaciones</div>
-                                <div class="item-after">
-                                    <div class="custom_check ok"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
-                                    <i class="f7-icons foto" onClick="FotoItem(2)">camera_fill</i><textarea class="img" name="Items[1][items][2][img]" style="display:none"></textarea>
-                                    <i class="f7-icons mensaje ok">compose_fill</i>
-                                    <i class="f7-icons">more_vertical_fill</i>
-                                </div>
-                              </div>
-                            </li>
-                            <li class="item-content">
-                              <div class="item-inner">
-                                <div class="item-title">Asistencia + Puntualidad + En Posicion 5' antes</div>
-                                <div class="item-after">
-                                    <div class="custom_check nm"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
-                                    <i class="f7-icons foto ok">camera_fill</i>
-                                    <i class="f7-icons mensaje ok">compose_fill</i>
-                                    <i class="f7-icons">more_vertical_fill</i>
-                                </div>
-                              </div>
-                            </li>
-                            <li class="item-content">
-                              <div class="item-inner">
-                                <div class="item-title">Post Fiesta Realizado en Tiempo y Forma</div>
-                                <div class="item-after">
-                                    <div class="custom_check bad"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
-                                    <i class="f7-icons foto">camera_fill</i>
-                                    <i class="f7-icons mensaje">compose_fill</i>
-                                    <i class="f7-icons">more_vertical_fill</i>
-                                </div>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="accordion-item"><a href="#" class="item-content item-link">
-                    <div class="item-inner">
-                      <div class="item-title">Item 2</div>
-                    </div></a>
-                  <div class="accordion-item-content">
-                    <div class="content-block">
-                      <p>Item 2 content. Lorem ipsum dolor sit amet...</p>
-                    </div>
-                  </div>
-                </li>
-              </ul>
+              <ul id="ListaModulosAuditoria"></ul>
             </div>  
+            <div class="auditoria_finalizar">
+            	<div class="list-block">
+            		<ul>
+                    	<li class="item-content audi_item_total" onclick="FotoItem('total')">
+                              <div class="item-inner">
+                                <div class="item-title">Sacar Foto</div>
+                                <div class="item-after">
+                                    <i class="f7-icons foto">camera_fill</i><textarea class="img" name="Foto" style="display:none"></textarea>
+                                </div>
+                        	</div>
+                    	</li>
+                    	<li class="item-content audi_item_total2" onclick="MensajeItem('total2')">
+                              <div class="item-inner">
+                                <div class="item-title">Agregar comentario</div>
+                                <div class="item-after">
+                                    <i class="f7-icons mensaje">document_text_fill</i><textarea class="msg" name="Comentario" style="display:none"></textarea>
+                                </div>
+                        	</div>
+                    	</li>
+                    	<li class="item-content audi_item_total3" onclick="Firma('total3')">
+                              <div class="item-inner">
+                                <div class="item-title">Firma del encargado</div>
+                                <div class="item-after">
+                                    <i class="f7-icons foto">compose_fill</i><textarea class="img" name="Firma" style="display:none"></textarea>
+                                </div>
+                        	</div>
+                    	</li>
+                	</ul>
+            	</div>
+            </div>
+            
+            <div style="padding:0 15px">
+            <a href="#" class="button button-big active" style="margin-bottom:10px">Enviar Auditoría</a>
+            <a href="#" class="button button-big">Guardado Parcial</a>
+            </div>
         </form>
     </div>
 
@@ -381,6 +351,73 @@
             </p>
         </div>
     </div>
+    
+  <div class="picker-modal picker-comentario">
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="left"><a href="#" class="close-picker">Cancelar</a></div>
+        <div class="right"><a href="#" onClick="SaveMensajeItem();">Guardar comentario</a></div>
+      </div>
+    </div>
+    <div class="picker-modal-inner">
+      <div class="content-block">
+        <h4 style="margin-top: 0;"></h4>
+        <div class="list-block" style="margin: 10px 0;">
+        <ul>
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="item-input">
+                <textarea placeholder="Ingrese un comentario"></textarea>
+              </div>
+            </div>
+          </div>
+          </li>
+          </ul>
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="picker-modal picker-firma">
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="left"><a href="#" class="close-picker">Cancelar</a></div>
+        <div class="center"><a href="#" onClick="erase();">Limpiar</a></div>
+        <div class="right"><a href="#" onClick="SaveFirmaItem();">Guardar firma</a></div>
+      </div>
+    </div>
+    <div class="picker-modal-inner" style="position:relative;">
+      <canvas id="can" style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:#FFF; border-top:solid 1px #c8c7cc"></canvas>
+    </div>
+  </div>
+    
+  <div class="picker-modal picker-sede">
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="left"><a href="#" class="close-picker">Cancelar</a></div>
+        <div class="right"><a href="#" onClick="AddAuditoriaAccion();">Nueva Auditoría</a></div>
+      </div>
+    </div>
+    <div class="picker-modal-inner">
+      <div class="content-block">
+        <h4 style="margin-top: 0;">Seleccione la sede</h4>
+        <div class="list-block" style="margin: 10px 0;">
+        <ul>
+        <li>
+          <div class="item-content">
+            <div class="item-inner">
+              <div class="item-input">
+                <select></select>
+              </div>
+            </div>
+          </div>
+          </li>
+          </ul>
+          </div>
+      </div>
+    </div>
+  </div>
 
     <script type="text/javascript" src="cordova.js"></script>   
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>

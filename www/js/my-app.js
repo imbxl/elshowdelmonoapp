@@ -32,10 +32,35 @@ var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
 });
 
-var EnAuditoria = false;
 function AddAuditoria(){
+	myApp.pickerModal('.picker-sede');
+	$$('.picker-sede select').html('<option value="1">Vicente lopez</option>');
+}
+var EnAuditoria = false;
+function AddAuditoriaAccion(){
+	myApp.popup('.popup-getting-started');
+	myApp.closeModal('.picker-sede'); 
 	EnAuditoria = true;
-	myApp.popup('.popup-auditoria');
+	var sede = '';
+	var sedetext = '';
+	$$('.picker-sede select').each(function(index, element) {
+        if($$('.picker-sede select').length-1 == index){
+			sede=$$(element).val();
+        	sedetext=$$(element).text();
+		}
+    });
+	$$('#FormAuditoria .accion').val("A");
+	$$('.titulo-auditoria').val(sedetext);
+	$$('#FormAuditoria .sede').val(sede);
+	$$('#FormAuditoria .id').val("");
+	
+	$$.post(BXL_WWW+'/datos.php?tipo=addAuditoria', { },
+		function( data ) {
+			myApp.closeModal('.popup-getting-started'); 
+			$$('#ListaModulosAuditoria').html(data);
+			myApp.popup('.popup-auditoria');
+		}
+	);
 }
 function CloseAuditoria(){
 	showConfirm("¿Desea salir de la auditoría? Se perderán todas las modificaciones.", 'Salir de Auditoría',function(){  
@@ -45,6 +70,23 @@ function CloseAuditoria(){
 }
 
 
+function ChangeCustomCheck(id) {
+	if($$('.audi_item_'+id+' .custom_check').hasClass('ok')){
+		$$('.audi_item_'+id+' .custom_check').removeClass('ok');
+		$$('.audi_item_'+id+' .custom_check').addClass('nm');
+		$$('.audi_item_'+id+' .valor').val('50');
+	}else if($$('.audi_item_'+id+' .custom_check').hasClass('nm')){
+		$$('.audi_item_'+id+' .custom_check').removeClass('nm');
+		$$('.audi_item_'+id+' .custom_check').addClass('bad');
+		$$('.audi_item_'+id+' .valor').val('0');
+	}else if($$('.audi_item_'+id+' .custom_check').hasClass('bad')){
+		$$('.audi_item_'+id+' .custom_check').removeClass('bad');
+		$$('.audi_item_'+id+' .valor').val('');
+	}else{
+		$$('.audi_item_'+id+' .custom_check').addClass('ok');
+		$$('.audi_item_'+id+' .valor').val('100');
+	}
+}
 function FotoItem(id) {
   	navigator.camera.getPicture(function(imageData) {
 	  	/*var smallImage = document.getElementById('fotopreview');
@@ -53,6 +95,123 @@ function FotoItem(id) {
 		$$('.audi_item_'+id+' .img').val("data:image/jpeg;base64,"+imageData);
 		$$('.audi_item_'+id+' .foto').addClass('ok');
 	}, function(){}, { quality: 50,	destinationType: destinationType.DATA_URL });
+}
+var MensajeID = 0;
+function MensajeItem(id) {
+	MensajeID = id;
+	myApp.pickerModal('.picker-comentario');
+	$$('.picker-comentario h4').html($$('.audi_item_'+id+' > .item-inner > .item-title').html());
+	$$('.picker-comentario textarea').val();
+	$$('.picker-comentario textarea').each(function(index, element) {
+        $$(element).val($$('.audi_item_'+id+' .msg').val());
+    });
+}
+function SaveMensajeItem() {
+	var mensaje = "";	
+	$$('.picker-comentario textarea').each(function(index, element) {
+        if($$('.picker-comentario textarea').length-1 == index) mensaje=$$(element).val();
+    });
+	$$('.audi_item_'+MensajeID+' .msg').val(mensaje);
+	$$('.audi_item_'+MensajeID+' .mensaje').addClass('ok');
+	if(mensaje == ''){
+		$$('.audi_item_'+MensajeID+' .mensaje').removeClass('ok');
+	}
+	$$('.picker-comentario textarea').each(function(index, element) {
+        $$(element).val('');
+    });
+	myApp.closeModal('.picker-comentario');
+	MensajeID = 0;
+}
+
+var firma_canvas, firma_ctx, firma_flag = false, firma_dot_flag = false,
+        firma_prevX = 0,
+        firma_currX = 0,
+        firma_prevY = 0,
+        firma_currY = 0;
+
+    var firma_x = "black",
+        firma_y = 2;
+    
+    function init() {
+        firma_canvas = document.getElementById('can');
+        firma_ctx = firma_canvas.getContext("2d");
+        firma_ctx.clearRect(0, 0, $$('#can').width(), $$('#can').height());
+    
+        firma_canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e)
+        }, false);
+        firma_canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+			console.log(e);
+			console.log($$('#can').offset());
+        }, false);
+        firma_canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        firma_canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false);
+    }
+    
+    function draw() {
+        firma_ctx.beginPath();
+        firma_ctx.moveTo(firma_prevX, firma_prevY);
+        firma_ctx.lineTo(firma_currX, firma_currY);
+        firma_ctx.strokeStyle = firma_x;
+        firma_ctx.lineWidth = firma_y;
+        firma_ctx.stroke();
+        firma_ctx.closePath();
+    }
+    
+    function erase() {
+        var m = confirm("Desea limpiar la firma?");
+        if (m) {
+            firma_ctx.clearRect(0, 0, $$('#can').width(), $$('#can').height());
+        }
+    }
+        
+    function findxy(res, e) {
+		var offset = $$('#can').offset();
+        if (res == 'down') {
+            firma_prevX = firma_currX;
+            firma_prevY = firma_currY;
+            firma_currX = e.clientX - offset.left;
+            firma_currY = e.clientY - offset.top;
+    
+            firma_flag = true;
+            firma_dot_flag = true;
+            if (firma_dot_flag) {
+                firma_ctx.beginPath();
+                firma_ctx.fillStyle = firma_x;
+                firma_ctx.fillRect(firma_currX, firma_currY, 2, 2);
+                firma_ctx.closePath();
+                firma_dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            firma_flag = false;
+        }
+        if (res == 'move') {
+            if (firma_flag) {
+                firma_prevX = firma_currX;
+                firma_prevY = firma_currY;
+                firma_currX = e.clientX - offset.left;
+                firma_currY = e.clientY - offset.top;
+                draw();
+            }
+        }
+    }
+var FirmaID = 0;
+function Firma(id) {
+	FirmaID = id;
+	myApp.pickerModal('.picker-firma');
+	init();
+}
+function SaveFirmaItem() {
+	$$('.audi_item_'+FirmaID+' .img').val(firma_canvas.toDataURL());
+	$$('.audi_item_'+FirmaID+' .foto').addClass('ok');
+	myApp.closeModal('.picker-firma');
+	FirmaID = 0;
 }
 
 var pictureSource;
