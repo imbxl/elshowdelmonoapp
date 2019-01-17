@@ -71,6 +71,8 @@ function onFail(message) {
   alert('Failed because: ' + message);
 }
 
+var pictureSource;
+var destinationType;
 $$(document).on('deviceready', function() {	  
 	if(typeof navigator.camera !== 'undefined'){
         pictureSource=navigator.camera.PictureSourceType;
