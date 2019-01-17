@@ -159,13 +159,6 @@
         	</div>
         </div>
         <form class="contenido">
-        
-            <a href="#" class="link" onclick="capturePhoto();">Capture Photo</a> <br>
-            <a href="#" class="link" onclick="capturePhotoEdit();">Capture Editable Photo</a> <br>
-            <a href="#" class="link" onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</a><br>
-            <a href="#" class="link" onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</a><br>
-    
-  			<img id="fotopreview" />
             <div class="list-block accordion-list">
               <ul>
                 <li class="accordion-item"><a href="#" class="item-content item-link">
@@ -187,12 +180,12 @@
                                 </div>
                               </div>
                             </li>
-                            <li class="item-content">
+                            <li class="item-content audi_item_2">
                               <div class="item-inner">
                                 <div class="item-title">Uniforme / Personificaciones</div>
                                 <div class="item-after">
                                     <div class="custom_check ok"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
-                                    <i class="f7-icons foto">camera_fill</i>
+                                    <i class="f7-icons foto" onClick="FotoItem(2)">camera_fill</i><textarea class="img" name="Items[1][items][2][img]" style="display:none"></textarea>
                                     <i class="f7-icons mensaje ok">compose_fill</i>
                                     <i class="f7-icons">more_vertical_fill</i>
                                 </div>
