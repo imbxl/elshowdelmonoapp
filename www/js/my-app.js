@@ -210,11 +210,32 @@ var firma_canvas, firma_ctx, firma_flag = false, firma_dot_flag = false,
             }
         }
     }
+	
+function getDrawing(){
+  navigator.pxDraw.getDrawing(onSuccess, onFail, {
+    destinationType: navigator.pxDraw.DestinationType.DATA_URL,
+    encodingType: navigator.pxDraw.EncodingType.PNG,
+    drawingType: navigator.pxDraw.DrawingType.BW,
+  });
+}
+
+function onSuccess(imageData) {
+	if(imageData == null) { return; }
+	var image = document.getElementById('myImage');
+	image.src = imageData;
+}
+
+function onFail(message) {
+	console.log('plugin message: ' + message);
+}
 var FirmaID = 0;
 function Firma(id) {
 	FirmaID = id;
+	getDrawing();
+	/*
 	myApp.pickerModal('.picker-firma');
 	init();
+	*/
 }
 function SaveFirmaItem() {
 	$$('.audi_item_'+FirmaID+' .img').val(firma_canvas.toDataURL());
