@@ -60,5 +60,5 @@
 	<plugin name="cordova-plugin-dialogs" />
 	<plugin name="cordova-plugin-console" />
 	<plugin name="cordova-plugin-statusbar" />
-	<plugin name="cordova-plugin-media-capture" />
+	<plugin name="phonegap-plugin-image-capture" />
 </widget>

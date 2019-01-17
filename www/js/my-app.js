@@ -45,16 +45,13 @@ function CloseAuditoria(){
 }
 
 function SacarFoto(){
-	navigator.device.capture.captureImage(function(mediaFiles){
-		var i, path, len;
-		for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-			path = mediaFiles[i].fullPath;
-			// do something interesting with the file
-    		showAlert(path, 'Captura');
-		}
-	}, function(error){
-    	showAlert('Error: ' + error.code, null, 'Error de captura');
-	}, {limit:1});
+	imageCapture.takePhoto()
+            .then(blob => {
+                console.log('Photo taken: ' + blob.type + ', ' + blob.size + 'B');
+                const image = document.getElementById('fotopreview') // img is an <img> tag
+                image.src = URL.createObjectURL(blob);
+            })
+            .catch(err => console.error('takePhoto() failed: ', err));
 }
 
 $$(document).on('deviceready', function() {	  
