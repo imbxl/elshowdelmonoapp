@@ -72,6 +72,11 @@ function onFail(message) {
 }
 
 $$(document).on('deviceready', function() {	  
+	if(typeof navigator.camera !== 'undefined'){
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+	}
+		
 	document.addEventListener("backbutton", function (e) { 
 		e.preventDefault(); 
 		
