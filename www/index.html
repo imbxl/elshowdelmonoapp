@@ -159,7 +159,12 @@
         	</div>
         </div>
         <form class="contenido">
-        	<a href="#" class="button button-fill" onclick="SacarFoto();">Foto</a>
+        
+    <button onclick="capturePhoto();">Capture Photo</button> <br>
+    <button onclick="capturePhotoEdit();">Capture Editable Photo</button> <br>
+    <button onclick="getPhoto(pictureSource.PHOTOLIBRARY);">From Photo Library</button><br>
+    <button onclick="getPhoto(pictureSource.SAVEDPHOTOALBUM);">From Photo Album</button><br>
+    
   			<img id="fotopreview" />
             <div class="list-block accordion-list">
               <ul>

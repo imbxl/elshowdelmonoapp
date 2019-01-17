@@ -44,18 +44,33 @@ function CloseAuditoria(){
 	},function(){});
 }
 
-function SacarFoto(){	
-	navigator.camera.getPicture(function(imageData){
-	   var image = document.getElementById('fotopreview');
-	   image.src = "data:image/jpeg;base64," + imageData;
-	}, function(fail){
-		alert(fail);
-	},	{
-	  quality: 50,
-	  destinationType: destinationType.FILE_URI,
-	  saveToPhotoAlbum: true
-	});
+
+function onPhotoDataSuccess(imageData) {
+  var smallImage = document.getElementById('fotopreview');
+  smallImage.style.display = 'block';
+  smallImage.src = "data:image/jpeg;base64," + imageData;
 }
+
+function onPhotoURISuccess(imageURI) {
+  var largeImage = document.getElementById('fotopreview');
+  largeImage.style.display = 'block';
+  largeImage.src = imageURI;
+}
+function capturePhoto() {
+  navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+	destinationType: destinationType.DATA_URL });
+}
+function capturePhotoEdit() {
+  navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true,
+	destinationType: destinationType.DATA_URL });
+}
+function getPhoto(source) {
+  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,	destinationType: destinationType.FILE_URI,	sourceType: source });
+}
+function onFail(message) {
+  alert('Failed because: ' + message);
+}
+
 $$(document).on('deviceready', function() {	  
 	document.addEventListener("backbutton", function (e) { 
 		e.preventDefault(); 
