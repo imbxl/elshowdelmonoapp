@@ -32,15 +32,103 @@ var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
 });
 
+var EnAuditoria = false;
+function AddAuditoria(){
+	EnAuditoria = true;
+	myApp.popup('.popup-auditoria');
+}
+function CloseAuditoria(){
+	showConfirm("¿Desea salir de la auditoría? Se perderán todas las modificaciones.", 'Salir de Auditoría',function(){  myApp.closeModal('.popup-auditoria'); },function(){});
+}
+
+function onPhotoFileSuccess(imageData) {
+  alert("onPhotoFileSuccess was called. imageData: "+imageData);
+  // Get image handle
+  console.log(JSON.stringify(imageData));
+
+  // Get image handle
+  //
+  var largeImage = document.getElementById('largeImage');
+  // Unhide image elements
+  //
+  largeImage.style.display = 'block';
+  document.getElementById('uploadpicbtn').style.display="block";
+  // Show the captured photo
+  // The inline CSS rules are used to resize the image
+  //
+  largeImage.src = imageData;
+  uploadimgdata=imageData;
+}
+// Called when a photo is successfully retrieved
+//
+function onPhotoURISuccess(imageURI) {
+  alert("onPhotoURISuccess was called. imageuri: "+imageURI);
+  // Uncomment to view the image file URI
+  // console.log(imageURI);
+  // Get image handle
+  //
+  var largeImage = document.getElementById('largeImage');
+  // Unhide image elements
+  //
+  largeImage.style.display = 'block';
+  document.getElementById('uploadpicbtn').style.display="block";
+  // Show the captured photo
+  // The inline CSS rules are used to resize the image
+  //
+
+//custom code to fix image uri
+  if (imageURI.substring(0,21)=="content://com.android") {
+    photo_split=imageURI.split("%3A");
+    imageURI="content://media/external/images/media/"+photo_split[1];
+  }
+
+  largeImage.src = imageURI;
+  document.getElementById('uploadpicbtn').style.display="block";
+
+uploadimgdata=imageURI;
+}
+
+function capturePhotoWithFile() {
+    navigator.camera.getPicture(onPhotoFileSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+}
+
+// A button will call this function
+//
+function getPhoto(source) {
+  alert("getphoto was called. source= "+source);
+  // Retrieve image file location from specified source
+  navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+    destinationType: destinationType.FILE_URI,
+    sourceType: source });
+}
+// Called if something bad happens.
+//
+function onFail(message) {
+  alert('Failed because: ' + message);
+}
+
 $$(document).on('deviceready', function() {
+	if(typeof navigator !== 'undefined' && typeof navigator.camera !== 'undefined'){
+   		pictureSource = navigator.camera.PictureSourceType;
+   		destinationType = navigator.camera.DestinationType;
+	}
+	  
 	document.addEventListener("backbutton", function (e) { 
 		e.preventDefault(); 
-		if (mainView.activePage.name === 'index') {
-			navigator.notification.confirm("Desea salir de la aplicación?", function(button){if(button!=2){ navigator.app.exitApp(); } }, "Confirmation", "Si,No");
+		
+		if(EnAuditoria){
+			CloseAuditoria();
+			return false;
+		}
+		
+		if (mainView.activePage.name === 'index' || mainView.activePage.name === 'control_lista') {
+			showConfirm("Desea salir de la aplicación?", 'Salir',function(){  navigator.app.exitApp(); },function(){});
 		} else {
 			mainView.router.back();
 		}
-		//return false;
+		$$('#MainToolbar .link').removeClass('active');
+		$$('#MainToolbar .link.'+mainView.activePage.name).addClass('active');
+		return false;
 	}, false ); 
 	$$('.view-main .navbar').show();
 	//if($$('.view-main .toolbar').html() != '') $$('.view-main .toolbar').show();
@@ -108,12 +196,16 @@ $$(document).on('pageInit', function (e) {
 	
     var page = e.detail.page;
 	
-	//console.log(page.name);
-	
     if (page.name === 'index') {
 		testLogin();
 		if(IniciadoSesion){
-			//console.log('TraerEventos');
+			if(SesionDatos['Tipo'] != 'STAFF'){
+			//console.log(SesionDatos);
+				setTimeout(function(){
+					mainView.router.load({url:'control_lista.html'});
+				}, 100);
+				return;
+			}
 			GetEventos();
 		}
 		//mainView.showToolbar(true);
@@ -136,6 +228,9 @@ $$(document).on('pageInit', function (e) {
 			$$('#Datos_Horas').html('<input type="number" onChange="CambiarHoras(this.value);" value="'+json['Horas']+'">');
 			//$$('#Datos_Puntos').html(parseInt(json['Puntos'])-parseInt(json['Canjes']));
 		});
+	}
+	
+    if (page.name === 'control_lista') {
 	}
 	
     if (page.name === 'puestos') {
@@ -196,28 +291,40 @@ function EnviarClaveNueva(){
 }
 
 var IniciadoSesion = false;
+var SesionDatos = {};
 function login(strU, strP) {
     //verificamos conexion y servidores
 	$$.post( BXL_WWW+"/login.php", {Email:strU, Clave:strP},
 		function( data ) {
-        	if (data == 'OK' || data == 'CLAVE_ORIGINAL') {
+        	if (data == 'ERROR') {
+				CloseLoaderPrincipal();
+				MostrarModalLogin('Los datos no son correctos.<br/>');
+			}else{				
+				SesionDatos = JSON.parse(data);
+				
 				myApp.closeModal('.login-screen', false);
 				var estrU = CryptoJS.AES.encrypt(strU, "strU");
 				var estrP = CryptoJS.AES.encrypt(strP, "strP");
 				window.localStorage.setItem("estru", estrU);
 				window.localStorage.setItem("estrp", estrP);
 				IniciadoSesion = true;
-				mainView.router.load({url:'index.html'});
+								
+				if(SesionDatos['Tipo'] == 'STAFF'){
+					$$('.only_staff').show();
+					$$('.only_emp').hide();
+					mainView.router.load({url:'index.html'});
+				}else{
+					mainView.router.load({url:'control_lista.html'});
+					$$('.only_staff').hide();
+					$$('.only_emp').show();
+				}
 				ConfigPush();
 				CloseLoaderPrincipal();
 				if(IniciadoSesion){
 					//console.log('TraerEventos');
 					GetEventos();
 				}
-				if(data == 'CLAVE_ORIGINAL') showMessage('Recuerde cambiar su contraseña','Informacion',function(){});
-			}else{
-				CloseLoaderPrincipal();
-				MostrarModalLogin('Los datos no son correctos.<br/>');
+				if(SesionDatos['ClaveCambiada'] == 'N') showMessage('Recuerde cambiar su contraseña','Informacion',function(){});
 			}
 		}
 	);
@@ -366,7 +473,7 @@ function EnviarConsulta(id,elm){
 function GetEventos(){
 	$$('.ProximosEventos').empty();
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=proximos', function (json) {
-		console.log(json);
+		//console.log(json);
 		var html = '';
 		$$.each(json, function (index, row) {
 			html += '<div class="card facebook-card">'+

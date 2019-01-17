@@ -40,11 +40,19 @@
                         </div>
                       </a>
                     </li>
-                    <li>
+                    <li class="only_staff">
                       <a href="puestos.html" class="item-link item-content">
                         <div class="item-media"><i class="f7-icons">list</i></div>
                         <div class="item-inner">
                           <div class="item-title">Puestos disponibles</div>
+                        </div>
+                      </a>
+                    </li>
+                    <li class="only_emp">
+                      <a href="control_lista.html" class="item-link item-content">
+                        <div class="item-media"><i class="f7-icons">list</i></div>
+                        <div class="item-inner">
+                          <div class="item-title">Auditorías</div>
                         </div>
                       </a>
                     </li>
@@ -110,9 +118,13 @@
             </div>
             <div id="MainToolbar" class="toolbar tabbar tabbar-labels">
                 <div class="toolbar-inner">
-                    <a href="index.html" class="link index">
+                    <a href="index.html" class="link index only_staff">
                         <i class="f7-icons">calendar</i>
                         <span class="tabbar-label" style="margin-left:0; margin-top:3px;">Agenda</span>
+                    </a>
+                    <a href="control_lista.html" class="link control_lista only_emp">
+                        <i class="f7-icons">list</i>
+                        <span class="tabbar-label" style="margin-left:0; margin-top:3px;">Auditorías</span>
                     </a>
                     <!--
                     <a href="calendario.html" class="link calendario">
@@ -120,7 +132,7 @@
                         <span class="tabbar-label" style="margin-left:0; margin-top:3px;">Calendario</span>
                     </a>
                     -->
-                    <a href="puestos.html" class="link puestos">
+                    <a href="puestos.html" class="link puestos only_staff">
                         <i class="f7-icons">check</i>
                         <span class="tabbar-label" style="margin-left:0; margin-top:3px;">Ofertas</span>
                     </a>
@@ -132,7 +144,97 @@
             </div>
         </div>
     </div>
-
+    
+    <div class="popup popup-auditoria" style="background-color:#F5F5F5">
+        <div class="navbar"> 
+        	<div class="navbar-inner navbar-on-center">
+                <div class="left">
+                    <a href="#" onClick="CloseAuditoria()" class="link">
+                        <i class="f7-icons">chevron_left</i>
+                        <span>Volver</span>
+                    </a>
+                </div>
+        		<div class="center sliding">Vicente López</div>
+        		<div class="right"></div>
+        	</div>
+        </div>
+        <form class="contenido">
+        	<a href="#" class="button button-fill" onclick="capturePhotoWithFile();">Take A Picture</a> <br>
+  			<a href="#" class="button button-fill" onclick="getPhoto(navigator.camera.PictureSourceType.SAVEDPHOTOALBUM);">Select from Gallery</a><br>
+  
+            <div class="list-block accordion-list">
+              <ul>
+                <li class="accordion-item"><a href="#" class="item-content item-link">
+                    <div class="item-inner">
+                      <div class="item-title">Staff</div>
+                    </div></a>
+                  <div class="accordion-item-content">
+                    <div class="content-block">
+                      	<div class="list-block">
+                          <ul>
+                            <li class="item-content">
+                              <div class="item-inner">
+                                <div class="item-title">Presencia y cuidado en el aspecto</div>
+                                <div class="item-after">
+                                    <div class="custom_check"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
+                                    <i class="f7-icons foto ok">camera_fill</i>
+                                    <i class="f7-icons mensaje">compose_fill</i>
+                                    <i class="f7-icons">more_vertical_fill</i>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="item-content">
+                              <div class="item-inner">
+                                <div class="item-title">Uniforme / Personificaciones</div>
+                                <div class="item-after">
+                                    <div class="custom_check ok"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
+                                    <i class="f7-icons foto">camera_fill</i>
+                                    <i class="f7-icons mensaje ok">compose_fill</i>
+                                    <i class="f7-icons">more_vertical_fill</i>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="item-content">
+                              <div class="item-inner">
+                                <div class="item-title">Asistencia + Puntualidad + En Posicion 5' antes</div>
+                                <div class="item-after">
+                                    <div class="custom_check nm"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
+                                    <i class="f7-icons foto ok">camera_fill</i>
+                                    <i class="f7-icons mensaje ok">compose_fill</i>
+                                    <i class="f7-icons">more_vertical_fill</i>
+                                </div>
+                              </div>
+                            </li>
+                            <li class="item-content">
+                              <div class="item-inner">
+                                <div class="item-title">Post Fiesta Realizado en Tiempo y Forma</div>
+                                <div class="item-after">
+                                    <div class="custom_check bad"><i class="f7-icons ok">check</i><span class="nm">n/m</span><i class="f7-icons bad">close</i></div>
+                                    <i class="f7-icons foto">camera_fill</i>
+                                    <i class="f7-icons mensaje">compose_fill</i>
+                                    <i class="f7-icons">more_vertical_fill</i>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="accordion-item"><a href="#" class="item-content item-link">
+                    <div class="item-inner">
+                      <div class="item-title">Item 2</div>
+                    </div></a>
+                  <div class="accordion-item-content">
+                    <div class="content-block">
+                      <p>Item 2 content. Lorem ipsum dolor sit amet...</p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>  
+        </form>
+    </div>
 
     <div class="popup popup-producto" style="background-color:#F0F0F0">
         <div class="navbar"> 
