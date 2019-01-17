@@ -137,13 +137,22 @@ var firma_canvas, firma_ctx, firma_flag = false, firma_dot_flag = false,
         firma_ctx = firma_canvas.getContext("2d");
         firma_ctx.clearRect(0, 0, $$('#can').width(), $$('#can').height());
     
+        firma_canvas.addEventListener("touchmove", function (e) {
+            findxy('move', e)
+        }, false);
+        firma_canvas.addEventListener("touchstart", function (e) {
+            findxy('down', e)
+        }, false);
+        firma_canvas.addEventListener("touchend", function (e) {
+            findxy('up', e);
+            findxy('out', e);
+        }, false);
+		
         firma_canvas.addEventListener("mousemove", function (e) {
             findxy('move', e)
         }, false);
         firma_canvas.addEventListener("mousedown", function (e) {
             findxy('down', e)
-			console.log(e);
-			console.log($$('#can').offset());
         }, false);
         firma_canvas.addEventListener("mouseup", function (e) {
             findxy('up', e)
