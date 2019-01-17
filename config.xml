@@ -64,5 +64,4 @@
 	<plugin name="cordova-plugin-console" />
 	<plugin name="cordova-plugin-statusbar" />
 	<plugin name="cordova-plugin-camera" />
-	<plugin spec="https://github.com/zobbe/cordova-plugin-pernexus-draw.git" />
 </widget>

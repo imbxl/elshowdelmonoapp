@@ -229,9 +229,10 @@ function onFail(message) {
 	console.log('plugin message: ' + message);
 }
 var FirmaID = 0;
+var canvas = document.getElementById("firma_canvas");
+var signaturePad = new SignaturePad(canvas);
 function Firma(id) {
 	FirmaID = id;
-	getDrawing();
 	/*
 	myApp.pickerModal('.picker-firma');
 	init();
