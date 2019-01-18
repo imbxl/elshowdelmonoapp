@@ -10,7 +10,16 @@
 <div class="pages">
 	<div data-page="control_lista" class="page">
         <div class="page-content" style="background: #F0F0F0; position:relative;">  
-            <div class="lista_sedes"></div>
+              <div class="toolbar tabbar tabbar-scrollable">
+                <div class="toolbar-inner">
+                  <a href="#tab_audit_pendientes" class="tab-link active">Pendientes</a>
+                  <a href="#tab_audit_finalizadas" class="tab-link">Finalizadas</a>
+                </div>
+              </div>
+    		<div class="tabs tabs-routable">
+                <div class="tab page-content active" style="padding:0" id="tab_audit_pendientes"></div>
+                <div class="tab page-content" style="padding:0" id="tab_audit_finalizadas"></div>
+            </div>
             <a href="#" onClick="AddAuditoria();" class="AddAuditoria"><i class="f7-icons">add</i></a>
         </div>
     </div>

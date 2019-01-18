@@ -33,31 +33,59 @@ var mainView = myApp.addView('.view-main', {
 });
 
 function AddAuditoria(){
-	myApp.pickerModal('.picker-sede');
-	$$('.picker-sede select').html('<option value="1">Vicente lopez</option>');
+	myApp.showPreloader();
+	$$.getJSON(BXL_WWW+'/datos.php?tipo=obtenerSedes',
+		function( data ) {
+			myApp.hidePreloader();
+			var Botones = [];
+			$$.each(data, function(i, row){
+				var ItemID = row.id;
+				var Nombre = row.Nombre;
+				Botones.push({
+					text: Nombre,
+					onClick: function() {
+						AddAuditoriaAccion(ItemID, Nombre);
+					}
+				  });
+			});			
+			myApp.modal({
+				title:  'Seleccione una sede',
+				text: '',
+				verticalButtons: true,
+				buttons: Botones
+			});
+		}
+	);
 }
 var EnAuditoria = false;
-function AddAuditoriaAccion(){
-	myApp.popup('.popup-getting-started');
-	myApp.closeModal('.picker-sede'); 
+function AddAuditoriaAccion(sede, sedetext){
+	myApp.showPreloader();
 	EnAuditoria = true;
-	var sede = '';
-	var sedetext = '';
-	$$('.picker-sede select').each(function(index, element) {
-        if($$('.picker-sede select').length-1 == index){
-			sede=$$(element).val();
-        	sedetext=$$(element).text();
-		}
-    });
 	$$('#FormAuditoria .accion').val("A");
-	$$('.titulo-auditoria').val(sedetext);
+	$$('.titulo-auditoria').html(sedetext);
 	$$('#FormAuditoria .sede').val(sede);
 	$$('#FormAuditoria .id').val("");
 	
 	$$.post(BXL_WWW+'/datos.php?tipo=addAuditoria', { },
 		function( data ) {
-			myApp.closeModal('.popup-getting-started'); 
-			$$('#ListaModulosAuditoria').html(data);
+			myApp.hidePreloader();
+			$$('#ContainerAuditoria').html(data);
+			myApp.popup('.popup-auditoria');
+		}
+	);
+}
+function EditarAuditoria(id){
+	myApp.showPreloader();
+	EnAuditoria = true;
+	$$('#FormAuditoria .accion').val("A");
+	$$('.titulo-auditoria').html(sedetext);
+	$$('#FormAuditoria .sede').val(sede);
+	$$('#FormAuditoria .id').val("");
+	
+	$$.getJSON(BXL_WWW+'/datos.php?tipo=editAuditoria&id='+id,
+		function( data ) {
+			myApp.hidePreloader();
+			$$('#ContainerAuditoria').html(data);
 			myApp.popup('.popup-auditoria');
 		}
 	);
@@ -71,6 +99,7 @@ function CloseAuditoria(){
 
 
 function ChangeCustomCheck(id) {
+	if($$('.audi_item_'+id).hasClass('noaplica')) return;
 	if($$('.audi_item_'+id+' .custom_check').hasClass('ok')){
 		$$('.audi_item_'+id+' .custom_check').removeClass('ok');
 		$$('.audi_item_'+id+' .custom_check').addClass('nm');
@@ -88,6 +117,7 @@ function ChangeCustomCheck(id) {
 	}
 }
 function FotoItem(id) {
+	if($$('.audi_item_'+id).hasClass('noaplica')) return;
   	navigator.camera.getPicture(function(imageData) {
 	  	/*var smallImage = document.getElementById('fotopreview');
 	  	smallImage.style.display = 'block';
@@ -98,6 +128,7 @@ function FotoItem(id) {
 }
 var MensajeID = 0;
 function MensajeItem(id) {
+	if($$('.audi_item_'+id).hasClass('noaplica')) return;
 	MensajeID = id;
 	myApp.pickerModal('.picker-comentario');
 	$$('.picker-comentario h4').html($$('.audi_item_'+id+' > .item-inner > .item-title').html());
@@ -123,126 +154,136 @@ function SaveMensajeItem() {
 	MensajeID = 0;
 }
 
-var firma_canvas, firma_ctx, firma_flag = false, firma_dot_flag = false,
-        firma_prevX = 0,
-        firma_currX = 0,
-        firma_prevY = 0,
-        firma_currY = 0;
-
-    var firma_x = "black",
-        firma_y = 2;
-    
-    function init() {
-        firma_canvas = document.getElementById('can');
-        firma_ctx = firma_canvas.getContext("2d");
-        firma_ctx.clearRect(0, 0, $$('#can').width(), $$('#can').height());
-    
-        firma_canvas.addEventListener("touchmove", function (e) {
-            findxy('move', e)
-        }, false);
-        firma_canvas.addEventListener("touchstart", function (e) {
-            findxy('down', e)
-        }, false);
-        firma_canvas.addEventListener("touchend", function (e) {
-            findxy('up', e);
-            findxy('out', e);
-        }, false);
-		
-        firma_canvas.addEventListener("mousemove", function (e) {
-            findxy('move', e)
-        }, false);
-        firma_canvas.addEventListener("mousedown", function (e) {
-            findxy('down', e)
-        }, false);
-        firma_canvas.addEventListener("mouseup", function (e) {
-            findxy('up', e)
-        }, false);
-        firma_canvas.addEventListener("mouseout", function (e) {
-            findxy('out', e)
-        }, false);
-    }
-    
-    function draw() {
-        firma_ctx.beginPath();
-        firma_ctx.moveTo(firma_prevX, firma_prevY);
-        firma_ctx.lineTo(firma_currX, firma_currY);
-        firma_ctx.strokeStyle = firma_x;
-        firma_ctx.lineWidth = firma_y;
-        firma_ctx.stroke();
-        firma_ctx.closePath();
-    }
-    
-    function erase() {
-        var m = confirm("Desea limpiar la firma?");
-        if (m) {
-            firma_ctx.clearRect(0, 0, $$('#can').width(), $$('#can').height());
-        }
-    }
-        
-    function findxy(res, e) {
-		var offset = $$('#can').offset();
-        if (res == 'down') {
-            firma_prevX = firma_currX;
-            firma_prevY = firma_currY;
-            firma_currX = e.clientX - offset.left;
-            firma_currY = e.clientY - offset.top;
-    
-            firma_flag = true;
-            firma_dot_flag = true;
-            if (firma_dot_flag) {
-                firma_ctx.beginPath();
-                firma_ctx.fillStyle = firma_x;
-                firma_ctx.fillRect(firma_currX, firma_currY, 2, 2);
-                firma_ctx.closePath();
-                firma_dot_flag = false;
-            }
-        }
-        if (res == 'up' || res == "out") {
-            firma_flag = false;
-        }
-        if (res == 'move') {
-            if (firma_flag) {
-                firma_prevX = firma_currX;
-                firma_prevY = firma_currY;
-                firma_currX = e.clientX - offset.left;
-                firma_currY = e.clientY - offset.top;
-                draw();
-            }
-        }
-    }
-	
-function getDrawing(){
-  navigator.pxDraw.getDrawing(onSuccess, onFail, {
-    destinationType: navigator.pxDraw.DestinationType.DATA_URL,
-    encodingType: navigator.pxDraw.EncodingType.PNG,
-    drawingType: navigator.pxDraw.DrawingType.BW,
-  });
-}
-
-function onSuccess(imageData) {
-	if(imageData == null) { return; }
-	var image = document.getElementById('myImage');
-	image.src = imageData;
-}
-
-function onFail(message) {
-	console.log('plugin message: ' + message);
-}
 var FirmaID = 0;
-var canvas = document.getElementById("firma_canvas");
-var signaturePad = new SignaturePad(canvas);
+var firma_canvas = document.getElementById("firma_canvas");
+document.getElementById("firma_canvas").width = ($$(window).width() < $$(window).height()) ? $$(window).width() : $$(window).height();
+document.getElementById("firma_canvas").style.width = ($$(window).width() < $$(window).height()) ? $$(window).width()+'px' : $$(window).height()+'px';
+var signaturePad = new SignaturePad(firma_canvas, {
+  backgroundColor: 'rgba(255, 255, 255, 1)',
+  penColor: 'rgb(0, 0, 0)'
+});
+function LimpiarFirma(){
+	signaturePad.clear();
+}
 function Firma(id) {
+	if($$('.audi_item_'+id).hasClass('noaplica')) return;
 	FirmaID = id;
+	var imgfirma = $$('.audi_item_'+FirmaID+' .img').val();
+	if(imgfirma) signaturePad.fromDataURL(imgfirma, {ratio: 1});
 	myApp.pickerModal('.picker-firma');
-	/*
-	init();
-	*/
 }
 function SaveFirmaItem() {
 	$$('.audi_item_'+FirmaID+' .img').val(signaturePad.toDataURL("image/jpeg"));
 	$$('.audi_item_'+FirmaID+' .foto').addClass('ok');
+	if(signaturePad.isEmpty()){
+		$$('.audi_item_'+FirmaID+' .foto').removeClass('ok');
+		$$('.audi_item_'+FirmaID+' .img').val('');
+	}
 	myApp.closeModal('.picker-firma');
-	FirmaID = 0;
+	FirmaID = 0;	
+	signaturePad.clear();
+}
+
+function MasOpciones(id){	
+	myApp.modal({
+		title:  'Item de auditoría',
+		text: $$('.audi_item_'+id+' > .item-inner > .item-title').html(),
+		buttons: [
+		  {
+			text: 'Aplica',
+			onClick: function() {
+				$$('.audi_item_'+id).removeClass('noaplica');
+			}
+		  },
+		  {
+			text: 'No Aplica',
+			onClick: function() {
+				$$('.audi_item_'+id+' .valor').val('NA');
+				$$('.audi_item_'+id+' textarea').val('');
+				$$('.audi_item_'+id+' .item-after > .f7-icons').removeClass('ok');
+				$$('.audi_item_'+id+' .custom_check').removeClass('ok');
+				$$('.audi_item_'+id+' .custom_check').removeClass('nm');
+				$$('.audi_item_'+id+' .custom_check').removeClass('bad');
+				$$('.audi_item_'+id).addClass('noaplica');
+			}
+		  }
+		]
+	});
+}
+
+function EnviarAuditoria(){
+	var Listo = true;
+	$$('.audi_item .valor').each(function(index, element) {
+        if($$(element).val() == '') Listo = false;
+    });
+	if(!Listo){
+		showMessage('Faltan completar items','Auditoría',function(){});
+		return;
+	}
+	if($$('.audi_item_total textarea').val() == ''){
+		showConfirm("¿Desea enviar la auditoría sin foto?", 'Auditoría',function(){  
+			EnviarAuditoriaAccion();
+		},function(){});
+	}else if($$('.audi_item_total2 textarea').val() == ''){
+		showConfirm("¿Desea enviar la auditoría sin comentarios?", 'Auditoría',function(){  
+			EnviarAuditoriaAccion();
+		},function(){});
+	}else if($$('.audi_item_total3 textarea').val() == ''){
+		showMessage('Debe firmar la auditoría para enviarla','Auditoría',function(){});
+		return;
+	}
+	EnviarAuditoriaAccion();
+}
+
+function EnviarAuditoriaAccion(){
+	GuardarAuditoriaAjax('Y');
+}
+function GuardarAuditoria(){
+	GuardarAuditoriaAjax('N');
+}
+function GuardarAuditoriaAjax(Finalizada){	
+	myApp.showPreloader();
+	$$('.popup-auditoria .Finalizada').val(Finalizada);
+	$$.post(BXL_WWW+'/datos.php?tipo=saveAuditoria', myApp.formToData('#FormAuditoria'),
+		function( data ) {
+			myApp.hidePreloader(); 
+			myApp.closeModal('.popup-auditoria');
+			mainView.router.load({url:'control_lista.html', reload: true});
+		}
+	);
+}
+
+function GetAuditorias(){
+	myApp.showPreloader();
+	$$('#tab_audit_pendientes').empty();
+	$$('#tab_audit_finalizadas').empty();
+	$$.getJSON(BXL_WWW+'/datos.php?tipo=Auditorias', function (json) {
+		console.log(json);
+		var html_P = '';
+		var html_F = '';
+		$$.each(json, function (index, row) {
+			var html = '';
+			html += '<div onclick="">\
+				<div class="card">\
+                <div class="card-header">\
+					<div class="user" style="width:100%;">\
+			 			<div style="float:right; color: #c02222;">'+row.Completado+'/'+row.Items+'</div>\
+                        <div class="name" style="font-size: 20px;">'+row.Sede+'</div>\
+                        <div class="time">'+row.Fecha+'</div>\
+                    </div>\
+                </div>\
+                <div class="card-content">\
+                    <div class="text">Usuario: '+row.NombreCompleto+'</div>\
+                </div>\
+            	</div>\
+			</div>';		
+			html_P += html;
+		});
+		
+		$$('#tab_audit_pendientes').html(html_P);
+		$$('#tab_audit_finalizadas').html(html_F);
+		myApp.hidePreloader();
+	});
 }
 
 var pictureSource;
@@ -371,10 +412,12 @@ $$(document).on('pageInit', function (e) {
 	}
 	
     if (page.name === 'control_lista') {
+		//lista_auditorias
+		GetAuditorias();
 	}
 	
     if (page.name === 'puestos') {
-		myApp.popup('.popup-getting-started');
+		myApp.showPreloader();
 		GetProductos();
 	}
 		
