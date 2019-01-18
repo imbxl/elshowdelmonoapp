@@ -76,16 +76,29 @@ function AddAuditoriaAccion(sede, sedetext){
 }
 function EditarAuditoria(id){
 	myApp.showPreloader();
-	EnAuditoria = true;
-	$$('#FormAuditoria .accion').val("A");
-	$$('.titulo-auditoria').html(sedetext);
-	$$('#FormAuditoria .sede').val(sede);
-	$$('#FormAuditoria .id').val("");
-	
+	EnAuditoria = true;	
 	$$.getJSON(BXL_WWW+'/datos.php?tipo=editAuditoria&id='+id,
 		function( data ) {
+			$$('#ContainerAuditoria').html(data['html']);
+			$$('#FormAuditoria .accion').val("U");
+			$$('.titulo-auditoria').html(data['Sede']);
+			$$('#FormAuditoria .sede').val(data['hotel_id']);
+			$$('#FormAuditoria .id').val(id);
+			
+			if(data['Foto'] != ''){
+				$$('.audi_item_total textarea').val(data['Foto']);
+				$$('.audi_item_total .foto').addClass('ok');
+			}
+			if(data['Comentario'] != ''){
+				$$('.audi_item_total2 textarea').val(data['Comentario']);
+				$$('.audi_item_total2 .mensaje').addClass('ok');
+			}
+			if(data['Firma'] != ''){
+				$$('.audi_item_total3 textarea').val(data['Firma']);
+				$$('.audi_item_total3 .foto').addClass('ok');
+			}
+			
 			myApp.hidePreloader();
-			$$('#ContainerAuditoria').html(data);
 			myApp.popup('.popup-auditoria');
 		}
 	);
@@ -200,7 +213,8 @@ function MasOpciones(id){
 			onClick: function() {
 				$$('.audi_item_'+id+' .valor').val('NA');
 				$$('.audi_item_'+id+' textarea').val('');
-				$$('.audi_item_'+id+' .item-after > .f7-icons').removeClass('ok');
+				$$('.audi_item_'+id+' .foto').removeClass('ok');
+				$$('.audi_item_'+id+' .mensaje').removeClass('ok');
 				$$('.audi_item_'+id+' .custom_check').removeClass('ok');
 				$$('.audi_item_'+id+' .custom_check').removeClass('nm');
 				$$('.audi_item_'+id+' .custom_check').removeClass('bad');
@@ -224,10 +238,12 @@ function EnviarAuditoria(){
 		showConfirm("¿Desea enviar la auditoría sin foto?", 'Auditoría',function(){  
 			EnviarAuditoriaAccion();
 		},function(){});
+		return;
 	}else if($$('.audi_item_total2 textarea').val() == ''){
 		showConfirm("¿Desea enviar la auditoría sin comentarios?", 'Auditoría',function(){  
 			EnviarAuditoriaAccion();
 		},function(){});
+		return;
 	}else if($$('.audi_item_total3 textarea').val() == ''){
 		showMessage('Debe firmar la auditoría para enviarla','Auditoría',function(){});
 		return;
@@ -263,7 +279,9 @@ function GetAuditorias(){
 		var html_F = '';
 		$$.each(json, function (index, row) {
 			var html = '';
-			html += '<div onclick="">\
+			var onclick = 'EditarAuditoria('+row.id+')';
+			if(row.Finalizada == 'Y') onclick = '';
+			html += '<div onclick="'+onclick+'">\
 				<div class="card">\
                 <div class="card-header">\
 					<div class="user" style="width:100%;">\
@@ -276,8 +294,12 @@ function GetAuditorias(){
                     <div class="text">Usuario: '+row.NombreCompleto+'</div>\
                 </div>\
             	</div>\
-			</div>';		
-			html_P += html;
+			</div>';	
+			if(row.Finalizada == 'Y'){
+				html_F += html;
+			}else{
+				html_P += html;
+			}
 		});
 		
 		$$('#tab_audit_pendientes').html(html_P);
