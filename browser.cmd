@@ -1,0 +1,2 @@
+phonegap build browser
+pause

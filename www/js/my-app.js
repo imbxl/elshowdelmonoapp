@@ -460,6 +460,8 @@ $$(document).on('pageInit', function (e) {
 
 function CloseLoaderPrincipal(){
 	myApp.closeModal('.popup-getting-started');
+	myApp.hidePreloader();
+	$$('.modal-overlay').remove();
 }
 
 function Registrarme() {
