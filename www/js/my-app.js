@@ -638,7 +638,7 @@ function GetProductos(){
 		//console.log(json);
 		var html = '';
 		$$.each(json, function (index, row) {
-			html += '<div id="prod_'+row.id+'" class="producto_item" categorias="'+row.Categorias+'">\
+			html += '<div id="prod_'+row.id+'" fecha="'+row.FechaOFI+'" tipo="'+row.Tipo+'" cargo="'+row.Cargo+'" sede="'+row.Sede+'" class="producto_item" categorias="'+row.Categorias+'">\
 				<div class="card">\
                 <div class="card-header">';
              /*html += '<div class="avatar">\
@@ -761,7 +761,17 @@ function ProductoCanjearAction(id, categoria){
 		if(json != 'OK'){
 			showMessage(json['msg'],'Error',function(){});
 		}else{
-			if(categoria == 'A') showMessage('El puesto se aceptó con éxito!','Confirmación',function(){});
+			if(categoria == 'A'){ 
+                showMessage('El puesto se aceptó con éxito!','Confirmación',function(){});
+                
+                var tipo = $$("#prod_"+id+"").attr('tipo');
+                var fecha = $$("#prod_"+id+"").attr('fecha');
+                var sede = $$("#prod_"+id+"").attr('sede');
+                var cargo = $$("#prod_"+id+"").attr('cargo');
+                var text = $$("#prod_"+id+" .text").text();
+                var startDate = new Date(fecha);
+                window.plugins.calendar.createEvent(cargo+" para "+tipo,sede,text,startDate,startDate,function(){},function(){});
+            }
 			if(categoria == 'R') showMessage('El puesto se rechazó correctamente!','Confirmación',function(){});
 		}
 		//myApp.closeModal('.popup-producto', false);
