@@ -531,6 +531,7 @@ function login(strU, strP) {
 				if(IniciadoSesion){
 					//console.log('TraerEventos');
 					GetEventos();
+                    GetConfirmaciones();
 				}
 				if(SesionDatos['ClaveCambiada'] == 'N') showMessage('Recuerde cambiar su contraseña','Informacion',function(){});
 			}
@@ -603,7 +604,10 @@ function ConfigPush(){
 				var tipo = '';
 				if(typeof data.additionalData.tipo !== 'undefined') tipo = data.additionalData.tipo;
 				if(tipo != ''){
-					if(data.title == 'Asignado a puesto'){
+					if(data.title == 'Debe confirmar su asistencia'){
+						mainView.router.load({url:'index.html', reload: true});
+                        GetConfirmaciones();
+					}else if(data.title == 'Asignado a puesto'){
 						mainView.router.load({url:'historial.html', reload: true});
 					}else if(data.title == 'Nuevo puesto de trabajo'){
 						mainView.router.load({url:'puestos.html', reload: true});
@@ -630,6 +634,42 @@ function FiltrarPorEmpresa(){
 		$$('.producto_item').hide();
 		$$('.prod_empresa_'+empresa).show();
 	}
+}
+
+
+function GetConfirmaciones(){
+	$$.getJSON(BXL_WWW+'/datos.php?tipo=confirmaciones', function (json) {
+		$$.each(json, function (index, row) {
+          myApp.modal({
+            title:  'Confirmación de asistencia',
+            text: 'Confirma su asistencia para el '+row.Tipo+' en '+row.Sede+' mañana a las '+row.HoraPresencia,
+            buttons: [
+              {
+                text: 'Confirmar',
+                onClick: function() {
+                    $$.post(BXL_WWW+"/datos.php?tipo=confirmaAsistencia", {id:row.id, confirma:'Y'},
+                        function( data ) {
+                            showMessage('Confirmación enviada','Confirmación Enviada',function(){});
+                            GetConfirmaciones();
+                        }
+                    );
+                }
+              },
+              {
+                text: 'Rechazar',
+                onClick: function() {
+                    $$.post(BXL_WWW+"/datos.php?tipo=confirmaAsistencia", {id:id, confirma:'C'},
+                        function( data ) {
+                            showMessage('Confirmación enviada','Confirmación Enviada',function(){});
+                            GetConfirmaciones();
+                        }
+                    );
+                }
+              }
+            ]
+          })
+		}); 
+	});
 }
 
 function GetProductos(){
