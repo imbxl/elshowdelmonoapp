@@ -658,7 +658,7 @@ function GetConfirmaciones(){
               {
                 text: 'Rechazar',
                 onClick: function() {
-                    $$.post(BXL_WWW+"/datos.php?tipo=confirmaAsistencia", {id:id, confirma:'C'},
+                    $$.post(BXL_WWW+"/datos.php?tipo=confirmaAsistencia", {id:row.id, confirma:'C'},
                         function( data ) {
                             showMessage('Confirmación enviada','Confirmación Enviada',function(){});
                             GetConfirmaciones();
