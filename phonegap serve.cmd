@@ -1,2 +1,2 @@
-phonegap serve --browser --no-proxy
+phonegap serve --browser
 pause

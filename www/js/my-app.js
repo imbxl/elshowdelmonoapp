@@ -503,6 +503,7 @@ function login(strU, strP) {
     //verificamos conexion y servidores
 	$$.post( BXL_WWW+"/login.php", {Email:strU, Clave:strP},
 		function( data ) {
+        console.log(data);
         	if (data == 'ERROR') {
 				CloseLoaderPrincipal();
 				MostrarModalLogin('Los datos no son correctos.<br/>');
