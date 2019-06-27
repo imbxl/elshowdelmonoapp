@@ -66,7 +66,7 @@ function AddAuditoriaAccion(sede, sedetext){
 	$$('#FormAuditoria .sede').val(sede);
 	$$('#FormAuditoria .id').val("");
 	
-	$$.post(BXL_WWW+'/datos.php?tipo=addAuditoria', { },
+	$$.post(BXL_WWW+'/datos.php?tipo=addAuditoria&sede='+sede, { },
 		function( data ) {
 			myApp.hidePreloader();
 			$$('#ContainerAuditoria').html(data);
@@ -135,8 +135,10 @@ function FotoItem(id) {
 	  	/*var smallImage = document.getElementById('fotopreview');
 	  	smallImage.style.display = 'block';
 	  	smallImage.src = "data:image/jpeg;base64," + imageData;*/
-		$$('.audi_item_'+id+' .img').val("data:image/jpeg;base64,"+imageData);
-		$$('.audi_item_'+id+' .foto').addClass('ok');
+        if(imageData != ''){
+            $$('.audi_item_'+id+' .img').val("data:image/jpeg;base64,"+imageData);
+            $$('.audi_item_'+id+' .foto').addClass('ok');
+        }
 	}, function(){}, { quality: 50,	destinationType: destinationType.DATA_URL });
 }
 var MensajeID = 0;
