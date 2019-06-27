@@ -12,7 +12,7 @@ var BXL_TITLE = 'El Show Del Mono';
 
 function showMessage(message, title, callbackOk){
 	title = title || BXL_TITLE;
-	myApp.alert(message, title, callbackOk);
+	myApp.alert(message, title, function(){ CloseLoaderPrincipal();  });
 }
 function showConfirm(message, title, callbackOk, callbackCancel){
 	title = title || BXL_TITLE;
