@@ -30,7 +30,6 @@
 		<preference name="android-build-tool" value="gradle" />
 		<resource-file src="google-services.json" target="app/google-services.json" />
         <allow-intent href="market:*" />
-		<plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
 		<icon src="icon.png" />
 		<splash src="splash.png" />
 		<plugin name="phonegap-plugin-push" spec="2.1.3">
