@@ -32,7 +32,7 @@
         <allow-intent href="market:*" />
 		<icon src="icon.png" />
 		<splash src="splash.png" />
-		<plugin name="phonegap-plugin-push" spec="2.2.3">
+		<plugin name="phonegap-plugin-push">
 			<variable name="SENDER_ID" value="925542413455" />
 		</plugin>
     </platform>
