@@ -503,10 +503,9 @@ var IniciadoSesion = false;
 var SesionDatos = {};
 function login(strU, strP) {
     //verificamos conexion y servidores
-				CloseLoaderPrincipal();
 	$$.post( BXL_WWW+"/login.php", {Email:strU, Clave:strP},
 		function( data ) {
-        //console.log(data);
+        console.log(data);
         	if (data == 'ERROR') {
 				CloseLoaderPrincipal();
 				MostrarModalLogin('Los datos no son correctos.<br/>');
