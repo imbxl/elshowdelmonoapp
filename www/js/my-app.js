@@ -606,7 +606,7 @@ function ConfigPush(){
 				var tipo = '';
 				if(typeof data.additionalData.tipo !== 'undefined') tipo = data.additionalData.tipo;
 				if(tipo != ''){
-					if(data.title == 'Debe confirmar su asistencia'){
+					if(data.title == 'Confirme asistencia'){
 						mainView.router.load({url:'index.html', reload: true});
                         GetConfirmaciones();
 					}else if(data.title == 'Asignado a puesto'){
